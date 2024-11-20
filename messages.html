@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>messages</title>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+    import { getDatabase, ref, get } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCw1rRo2iVslQwavgBQzMQ5pvTpPRqJfI8",
+      authDomain: "megkus-admin.firebaseapp.com",
+      databaseURL: "https://megkus-admin-default-rtdb.firebaseio.com/",
+      projectId: "megkus-admin",
+      storageBucket: "megkus-admin.appspot.com",
+      messagingSenderId: "292375235774",
+      appId: "1:292375235774:web:578b2ea6d8dbd799a0a2ef"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // URL parametrelerinden kullanıcı adını al
+    const urlParams = new URLSearchParams(window.location.search);
+    const username = urlParams.get('username');
+
+    // Eğer username yoksa veya giriş yapılmamışsa giriş sayfasına yönlendir
+    if (!username) {
+      window.location.href = "login.html"; // Giriş sayfasına yönlendir
+    } else {
+      // Kullanıcı adı parametresi var, PIN doğrulama yapılacak
+      const userPin = prompt(`son güvenlik doğrulaması için, ${username} adlı kullanıcısının PIN'ini girin:`);
+      
+      if (userPin) {
+        const userRef = ref(database, 'users/' + username);
+        get(userRef).then((snapshot) => {
+          if (snapshot.exists()) {
+            const userData = snapshot.val();
+            if (userData.pin === userPin) {
+              // PIN doğrulandı, mesajları göster
+              const messagesContainer = document.getElementById('messagesContainer');
+              const userMessagesRef = ref(database, 'messages/' + username );
+              
+              get(userMessagesRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                  const messages = snapshot.val();
+                  Object.keys(messages).forEach(key => {
+                    const message = messages[key];
+                    const messageElement = document.createElement('div');
+                    messageElement.innerHTML = `<p>${message.message}</p><br>`;
+                    messagesContainer.appendChild(messageElement);
+                  });
+                } else {
+                  messagesContainer.innerHTML = 'no messages';
+                }
+              }).catch((error) => {
+                messagesContainer.innerHTML = '404' + error.message;
+              });
+            } else {
+              alert('wrong PIN!');
+            }
+          } else {
+            alert('user not found');
+          }
+        }).catch((error) => {
+          alert('Hata oluştu: ' + error.message);
+        });
+      } else {
+        alert('PIN is required!');
+      }
+    }
+  </script>
+</head>
+<body>
+    <br>
+    <br>
+    <a href="https://megk.us/">go to homepage</a>
+    <style>a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }</style>
+
+  <h2>messages</h2>
+
+  <div id="messagesContainer">
+    <a href="https://megk.us/">go to homepage</a>
+    <style>a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }</style>
+
+  </div>
+</body>
+</html>
+<style>/* Genel stil ayarları */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: darkkhaki no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      text-align: center;
+    }
+    
+    h2 {
+      margin-top: 30px;
+      font-size: 2em;
+      color: #ff5733; /* Noel Kırmızısı */
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    }
+    
+    /* Form stili */
+    form {
+      max-width: 480px;
+      margin: 20px auto;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    input, textarea, button {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1em;
+      background-color: #fff;
+      color: #333;
+    }
+    
+    /* Buton rengi */
+    button {
+      background-color: #ff5733; /* Noel Kırmızısı */
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    button:hover {
+      background-color: #ff2a00; /* Koyu kırmızı */
+    }
+    
+    /* Form elementleri */
+    input[type="text"], input[type="password"], textarea {
+      border: 1px solid #ff5733;
+    }
+    
+    /* Mesaj container stili */
+    #messagesContainer {
+      max-width: 480px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Mesaj stili */
+    #messagesContainer div {
+      background-color: #ff5733; /* Noel Kırmızısı */
+      color: white;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Yüksek ekranlar için font büyüklüğü */
+    @media screen and (min-width: 768px) {
+      h2 {
+        font-size: 2.5em;
+      }
+    }
+    
+    /* Küçük ekranlar (mobil) için stil */
+    @media screen and (max-width: 480px) {
+      body {
+        background-size: 100%;
+      }
+    
+      h2 {
+        font-size: 1.8em;
+      }
+    
+      form {
+        padding: 15px;
+        margin: 10px;
+      }
+    
+      button {
+        padding: 14px;
+      }
+    }
+    
+    /* Kartpostal arka planı */
+    form::before {
+      content: "megk.us";
+      font-size: 3em;
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    </style>

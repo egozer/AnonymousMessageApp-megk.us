@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>register for free</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <style>
+    /* General styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: darkkhaki no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      text-align: center;
+    }
+
+    h2 {
+      margin-top: 30px;
+      font-size: 2em;
+      color: #ff5733; /* Christmas Red */
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    }
+
+    form {
+      max-width: 480px;
+      margin: 20px auto;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1em;
+      background-color: #fff;
+      color: #333;
+    }
+
+    button {
+      background-color: #ff5733; /* Christmas Red */
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #ff2a00; /* Dark Red */
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      background: #039be5;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: white;
+      padding: 16px;
+      border-radius: 4px;
+    }
+
+    @media screen and (max-width: 480px) {
+      form {
+        padding: 15px;
+        margin: 10px;
+      }
+      button {
+        padding: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>register</h2>
+  <form id="registerForm">
+    <a href="https://megk.us/">go to homepage</a>
+    <style>a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }</style>
+
+    <input type="text" id="username" placeholder="user-name" required /><br>
+    <input type="password" id="pin" placeholder="PIN (4 digit)" maxlength="4" required /><br>
+    <button type="submit">register</button>
+    <a href="https://megk.us/login">have an acc? log in</a>
+  </form>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCw1rRo2iVslQwavgBQzMQ5pvTpPRqJfI8",
+      authDomain: "megkus-admin.firebaseapp.com",
+      databaseURL: "https://megkus-admin-default-rtdb.firebaseio.com/",
+      projectId: "megkus-admin",
+      storageBucket: "megkus-admin.appspot.com",
+      messagingSenderId: "292375235774",
+      appId: "1:292375235774:web:578b2ea6d8dbd799a0a2ef"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // Form submission handler
+    const registerForm = document.getElementById('registerForm');
+    registerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const pin = document.getElementById('pin').value;
+
+      if (username.trim() === '' || pin.trim() === '') {
+        alert('Lütfen tüm alanları doldurun!');
+        return;
+      }
+
+      if (pin.length !== 4 || isNaN(pin)) {
+        alert('PIN, 4 haneli bir sayı olmalıdır!');
+        return;
+      }
+
+      const userRef = database.ref('users/' + username);
+      userRef.set({
+        pin: pin
+      }).then(() => {
+        alert('Kayıt başarılı!');
+        window.location.href = "login.html";
+      }).catch((error) => {
+        alert('Kayıt sırasında hata oluştu: ' + error.message);
+      });
+    });
+  </script>
+</body>
+</html>
