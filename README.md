@@ -1,6 +1,5 @@
 # Firebase-Based Messaging System with User Authentication
 
-#BY THE WAY BEFORE START YOU CAN PREVIEW THIS PROJECT FROM [https://megkus-admin.web.app](https://megkus-admin.web.app)
 
 This project is a simple messaging system built with Firebase, where users can log in with a username and PIN to view their messages. Users can send messages without logging in, but only logged-in users can view their own messages. 
 
